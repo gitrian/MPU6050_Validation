@@ -3,6 +3,7 @@
 void setup() {
   // put your setup code here, to run once:
   digitalWrite(8, HIGH);
+  digitalWrite(10, HIGH);
 }
 
 void loop() {
