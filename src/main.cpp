@@ -1,15 +1,13 @@
 #include <Arduino.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <Wire.h>
+#include <dmpKey.h>
+#include <dmpmap.h>
+#include <inv_mpu.h>
+//#include "inv_mpu_dmp_motion_driver.h"
 
-void setup() {
-  // put your setup code here, to run once:
-  //comment
-  digitalWrite(8, HIGH);
-  digitalWrite(10, HIGH);
+void setup()
+{
+
 }
 
 void loop() {
