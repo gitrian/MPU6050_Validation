@@ -1,4 +1,4 @@
-#include "arduino_mpu.h"
+#include "Arduino_impl.h"
 #include <I2Cdev.h>
 
 #ifdef __cplusplus

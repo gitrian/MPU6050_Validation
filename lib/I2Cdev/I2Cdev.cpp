@@ -22,14 +22,17 @@
 /* ============================================
 I2Cdev device library code is placed under the MIT license
 Copyright (c) 2013 Jeff Rowberg
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
+
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -257,7 +260,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)min(length - k, BUFFER_LENGTH));
-
+        
                 for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
                     data[count] = Wire.read();
                     #ifdef I2CDEV_SERIAL_DEBUG
@@ -265,7 +268,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                         if (count + 1 < length) Serial.print(" ");
                     #endif
                 }
-
+        
                 Wire.endTransmission();
             }
         #elif (ARDUINO > 100)
@@ -281,7 +284,7 @@ int8_t I2Cdev::readBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)min(length - k, BUFFER_LENGTH));
-
+        
                 for (; Wire.available() && (timeout == 0 || millis() - t1 < timeout); count++) {
                     data[count] = Wire.read();
                     #ifdef I2CDEV_SERIAL_DEBUG
@@ -353,7 +356,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
-
+    
                 bool msb = true; // starts with MSB, then LSB
                 for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout);) {
                     if (msb) {
@@ -376,7 +379,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
         #elif (ARDUINO == 100)
             // Arduino v1.0.0, Wire library
             // Adds standardized write() and read() stream methods instead of send() and receive()
-
+    
             // I2C/TWI subsystem uses internal buffer that breaks with large data requests
             // so if user requests more than BUFFER_LENGTH bytes, we have to do it in
             // smaller chunks instead of all at once
@@ -386,7 +389,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
-
+    
                 bool msb = true; // starts with MSB, then LSB
                 for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout);) {
                     if (msb) {
@@ -403,7 +406,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                     }
                     msb = !msb;
                 }
-
+        
                 Wire.endTransmission();
             }
         #elif (ARDUINO > 100)
@@ -419,7 +422,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                 Wire.endTransmission();
                 Wire.beginTransmission(devAddr);
                 Wire.requestFrom(devAddr, (uint8_t)(length * 2)); // length=words, this wants bytes
-
+        
                 bool msb = true; // starts with MSB, then LSB
                 for (; Wire.available() && count < length && (timeout == 0 || millis() - t1 < timeout);) {
                     if (msb) {
@@ -436,7 +439,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
                     }
                     msb = !msb;
                 }
-
+        
                 Wire.endTransmission();
             }
         #endif
@@ -465,7 +468,7 @@ int8_t I2Cdev::readWords(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint1
         Serial.print(count, DEC);
         Serial.println(" read).");
     #endif
-
+    
     return count;
 }
 
@@ -712,6 +715,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     FastWire
     - 0.24 added stop
     - 0.23 added reset
+
      This is a library to help faster programs to read I2C devices.
      Copyright(C) 2012 Francesco Ferrara
      occhiobello at gmail dot com
@@ -903,50 +907,50 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
 
     /*
     call this version 1.0
-
+    
     Offhand, the only funky part that I can think of is in nbrequestFrom, where the buffer
     length and index are set *before* the data is actually read. The problem is that these
     are variables local to the TwoWire object, and by the time we actually have read the
-    data, and know what the length actually is, we have no simple access to the object's
+    data, and know what the length actually is, we have no simple access to the object's 
     variables. The actual bytes read *is* given to the callback function, though.
-
+    
     The ISR code for a slave receiver is commented out. I don't have that setup, and can't
     verify it at this time. Save it for 2.0!
-
-    The handling of the read and write processes here is much like in the demo sketch code:
+    
+    The handling of the read and write processes here is much like in the demo sketch code: 
     the process is broken down into sequential functions, where each registers the next as a
     callback, essentially.
-
-    For example, for the Read process, twi_read00 just returns if TWI is not yet in a
+    
+    For example, for the Read process, twi_read00 just returns if TWI is not yet in a 
     ready state. When there's another interrupt, and the interface *is* ready, then it
     sets up the read, starts it, and registers twi_read01 as the function to call after
     the *next* interrupt. twi_read01, then, just returns if the interface is still in a
     "reading" state. When the reading is done, it copies the information to the buffer,
-    cleans up, and calls the user-requested callback function with the actual number of
+    cleans up, and calls the user-requested callback function with the actual number of 
     bytes read.
-
+    
     The writing is similar.
-
+    
     Questions, comments and problems can go to Gene@Telobot.com.
-
+    
     Thumbs Up!
     Gene Knight
-
+    
     */
-
+    
     uint8_t TwoWire::rxBuffer[NBWIRE_BUFFER_LENGTH];
     uint8_t TwoWire::rxBufferIndex = 0;
     uint8_t TwoWire::rxBufferLength = 0;
-
+    
     uint8_t TwoWire::txAddress = 0;
     uint8_t TwoWire::txBuffer[NBWIRE_BUFFER_LENGTH];
     uint8_t TwoWire::txBufferIndex = 0;
     uint8_t TwoWire::txBufferLength = 0;
-
+    
     //uint8_t TwoWire::transmitting = 0;
     void (*TwoWire::user_onRequest)(void);
     void (*TwoWire::user_onReceive)(int);
-
+    
     static volatile uint8_t twi_transmitting;
     static volatile uint8_t twi_state;
     static uint8_t twi_slarw;
@@ -961,7 +965,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     static volatile uint8_t twi_Done;
     void (*twi_cbendTransmissionDone)(int);
     void (*twi_cbreadFromDone)(int);
-
+    
     void twi_init() {
         // initialize state
         twi_state = TWI_READY;
@@ -992,7 +996,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         TWSTA - TWI Start Condition
         */
     }
-
+    
     typedef struct {
         uint8_t address;
         uint8_t* data;
@@ -1013,13 +1017,13 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         twi_Return_Value = bRetVal;
         fNextInterruptFunction = 0;
     }
-
+    
     uint8_t twii_WaitForDone(uint16_t timeout) {
         uint32_t endMillis = millis() + timeout;
         while (!twi_Done && (timeout == 0 || millis() < endMillis)) continue;
         return twi_Return_Value;
     }
-
+    
     void twii_SetState(uint8_t ucState) {
         twi_state = ucState;
     }
@@ -1069,8 +1073,8 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         if (twi_cbendTransmissionDone) return twi_cbendTransmissionDone(twi_Return_Value);
         return;
     }
-
-
+    
+    
     void twi_write00() {
         if (TWI_READY != twi_state) return; // blocking test
         if (TWI_BUFFER_LENGTH < ptwv -> length) {
@@ -1087,7 +1091,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         fNextInterruptFunction = twi_write01; // next routine
         return twi_write01();
     }
-
+    
     void twi_writeTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t wait) {
         uint8_t i;
         ptwv = (twi_Write_Vars *)malloc(sizeof(twi_Write_Vars));
@@ -1107,7 +1111,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         if (twi_cbreadFromDone) return twi_cbreadFromDone(twi_Return_Value);
         return;
     }
-
+    
     void twi_read00() {
         if (TWI_READY != twi_state) return; // blocking test
         if (TWI_BUFFER_LENGTH < ptwv -> length) twi_Finish(0); // error return
@@ -1140,17 +1144,17 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
             TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
         }
     }
-
+    
     void twi_stop(void) {
         // send stop condition
         TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTO);
-
+    
         // wait for stop condition to be exectued on bus
         // TWINT is not set after a stop condition!
         while (TWCR & _BV(TWSTO)) {
             continue;
         }
-
+    
         // update twi state
         twi_state = TWI_READY;
     }
@@ -1158,11 +1162,11 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     void twi_releaseBus(void) {
         // release bus
         TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT);
-
+    
         // update twi state
         twi_state = TWI_READY;
     }
-
+    
     SIGNAL(TWI_vect) {
         switch (TW_STATUS) {
             // All Master
@@ -1172,7 +1176,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
                 TWDR = twi_slarw;
                 twi_reply(1);
                 break;
-
+    
             // Master Transmitter
             case TW_MT_SLA_ACK:  // slave receiver acked address
             case TW_MT_DATA_ACK: // slave receiver acked data
@@ -1200,7 +1204,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
                 twi_error = TW_MT_ARB_LOST;
                 twi_releaseBus();
                 break;
-
+    
             // Master Receiver
             case TW_MR_DATA_ACK: // data received, ack sent
                 // put byte into buffer
@@ -1233,10 +1237,12 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
             case TW_SR_ARB_LOST_GCALL_ACK: // lost arbitration, returned ack
                 // enter slave receiver mode
                 twi_state = TWI_SRX;
+
                 // indicate that rx buffer can be overwritten and ack
                 twi_rxBufferIndex = 0;
                 twi_reply(1);
                 break;
+
             case TW_SR_DATA_ACK:       // data received, returned ack
             case TW_SR_GCALL_DATA_ACK: // data received generally, returned ack
                 // if there is still room in the rx buffer
@@ -1249,47 +1255,60 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
                     twi_reply(0);
                 }
                 break;
+
             case TW_SR_STOP: // stop or repeated start condition received
                 // put a null char after data if there's room
                 if (twi_rxBufferIndex < TWI_BUFFER_LENGTH) {
                     twi_rxBuffer[twi_rxBufferIndex] = 0;
                 }
+
                 // sends ack and stops interface for clock stretching
                 twi_stop();
+
                 // callback to user defined callback
                 twi_onSlaveReceive(twi_rxBuffer, twi_rxBufferIndex);
+
                 // since we submit rx buffer to "wire" library, we can reset it
                 twi_rxBufferIndex = 0;
+
                 // ack future responses and leave slave receiver state
                 twi_releaseBus();
                 break;
+
             case TW_SR_DATA_NACK:       // data received, returned nack
             case TW_SR_GCALL_DATA_NACK: // data received generally, returned nack
                 // nack back at master
                 twi_reply(0);
                 break;
+
             // Slave Transmitter
             case TW_ST_SLA_ACK:          // addressed, returned ack
             case TW_ST_ARB_LOST_SLA_ACK: // arbitration lost, returned ack
                 // enter slave transmitter mode
                 twi_state = TWI_STX;
+
                 // ready the tx buffer index for iteration
                 twi_txBufferIndex = 0;
+
                 // set tx buffer length to be zero, to verify if user changes it
                 twi_txBufferLength = 0;
+
                 // request for txBuffer to be filled and length to be set
                 // note: user must call twi_transmit(bytes, length) to do this
                 twi_onSlaveTransmit();
+
                 // if they didn't change buffer & length, initialize it
                 if (0 == twi_txBufferLength) {
                     twi_txBufferLength = 1;
                     twi_txBuffer[0] = 0x00;
                 }
-
+                
                 // transmit first byte from buffer, fall through
+
             case TW_ST_DATA_ACK: // byte sent, ack returned
                 // copy data to output register
                 TWDR = twi_txBuffer[twi_txBufferIndex++];
+
                 // if there is more to send, ack, otherwise nack
                 if (twi_txBufferIndex < twi_txBufferLength) {
                     twi_reply(1);
@@ -1297,6 +1316,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
                     twi_reply(0);
                 }
                 break;
+
             case TW_ST_DATA_NACK: // received nack, we are done
             case TW_ST_LAST_DATA: // received ack, but we are done already!
                 // ack future responses
@@ -1320,26 +1340,26 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
     }
 
     TwoWire::TwoWire() { }
-
+    
     void TwoWire::begin(void) {
         rxBufferIndex = 0;
         rxBufferLength = 0;
-
+    
         txBufferIndex = 0;
         txBufferLength = 0;
 
         twi_init();
     }
-
+    
     void TwoWire::beginTransmission(uint8_t address) {
         //beginTransmission((uint8_t)address);
 
         // indicate that we are transmitting
         twi_transmitting = 1;
-
+        
         // set address of targeted slave
         txAddress = address;
-
+        
         // reset tx buffer iterator vars
         txBufferIndex = 0;
         txBufferLength = 0;
@@ -1366,7 +1386,7 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         twi_writeTo(txAddress, txBuffer, txBufferLength, 1);
         return;
     }
-
+    
     void TwoWire::send(uint8_t data) {
         if (twi_transmitting) {
             // in master transmitter mode
@@ -1387,21 +1407,21 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
             //twi_transmit(&data, 1);
         }
     }
-
+    
     uint8_t TwoWire::receive(void) {
         // default to returning null char
         // for people using with char strings
         uint8_t value = 0;
-
+      
         // get each successive byte on each call
         if (rxBufferIndex < rxBufferLength) {
             value = rxBuffer[rxBufferIndex];
             ++rxBufferIndex;
         }
-
+    
         return value;
     }
-
+    
     uint8_t TwoWire::requestFrom(uint8_t address, int quantity, uint16_t timeout) {
         // clamp to buffer length
         if (quantity > NBWIRE_BUFFER_LENGTH) {
@@ -1416,10 +1436,10 @@ uint16_t I2Cdev::readTimeout = I2CDEV_DEFAULT_READ_TIMEOUT;
         // set rx buffer iterator vars
         rxBufferIndex = 0;
         rxBufferLength = read;
-
+    
         return read;
     }
-
+    
     void TwoWire::nbrequestFrom(uint8_t address, int quantity, void (*function)(int)) {
         // clamp to buffer length
         if (quantity > NBWIRE_BUFFER_LENGTH) {
